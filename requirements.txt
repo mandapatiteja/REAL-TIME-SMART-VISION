@@ -1,0 +1,14 @@
+flask==3.0.0
+flask-cors==4.0.0
+werkzeug==3.0.1
+ultralytics==8.1.0
+deepface==0.0.87
+googletrans==4.0.0-rc1
+gtts==2.5.0
+firebase-admin==6.4.0
+opencv-python==4.9.0.80
+pillow==10.2.0
+numpy==1.26.3
+requests==2.31.0
+python-dotenv==1.0.0
+wikipedia==1.4.0

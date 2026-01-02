@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - Real-Time Vision Explainer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">🔍 Vision Explainer</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/history" class="nav-link">History</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="results-container">
+            <h1 class="results-title">📊 Analysis Results</h1>
+            
+            <!-- Image Comparison Section -->
+            <div class="image-comparison-section">
+                <h2 style="color: #667eea; margin-bottom: 1rem;">📸 Detection Visualization</h2>
+                
+                <div class="images-grid">
+                    <div class="image-card">
+                        <h3>Original Image</h3>
+                        <img id="originalImage" class="result-image" alt="Original">
+                    </div>
+                    
+                    <div class="image-card" id="annotatedImageCard" style="display: none;">
+                        <h3>Detected Objects</h3>
+                        <img id="annotatedImage" class="result-image" alt="Annotated with bounding boxes">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-grid">
+                <div class="info-section">
+                    <div class="info-card">
+                        <h2>🎯 Detected Objects</h2>
+                        <div id="objectsList" class="objects-list"></div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h2>👤 Detected Faces</h2>
+                        <div id="facesList" class="faces-list"></div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h2>📝 Detailed Description</h2>
+                        <p id="description" class="description-text"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Translation Section -->
+            <div class="translation-section">
+                <h2>🌍 Multilingual Translations</h2>
+                <div class="language-selector">
+                    <label><input type="checkbox" value="te" checked> Telugu</label>
+                    <label><input type="checkbox" value="hi" checked> Hindi</label>
+                    <label><input type="checkbox" value="es" checked> Spanish</label>
+                    <label><input type="checkbox" value="de"> German</label>
+                    <label><input type="checkbox" value="fr"> French</label>
+                </div>
+                
+                <button id="translateBtn" class="btn btn-primary">🔄 Translate</button>
+                <div id="translationsContainer" class="translations-container"></div>
+            </div>
+            
+            <!-- Audio Section -->
+            <div class="audio-section">
+                <h2>🔊 Audio Narration</h2>
+                <div id="audioControls" class="audio-controls"></div>
+            </div>
+            
+            <!-- Shopping Section -->
+            <div class="shopping-section">
+                <h2>🛍️ Shopping Links</h2>
+                <div id="shoppingLinks" class="shopping-links"></div>
+            </div>
+            
+            <!-- Lens-style Insights Section -->
+            <div class="lens-section">
+                <h2>🔎 Lens-style Insights</h2>
+                <p class="lens-subtitle">Extra context, smart searches, and similar image suggestions</p>
+                <div id="lensInsights" class="lens-grid"></div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-section">
+                <button id="saveBtn" class="btn btn-primary">💾 Save Results</button>
+                <button id="newAnalysisBtn" class="btn btn-secondary">🔄 New Analysis</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Real-Time Vision Explainer. Powered by YOLOv8 & DeepFace.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/results.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Welcome - Real-Time Vision Explainer{% endblock %}
+
+{% block content %}
+<section class="welcome-hero">
+    <div class="welcome-gradient"></div>
+    <div class="welcome-inner">
+        <div class="welcome-left">
+            <div class="welcome-badge">
+                <span>AI Powered</span>
+                <span>Real-Time Vision</span>
+            </div>
+            <h1 class="welcome-title">
+                See the world
+                <span>through AI eyes</span>
+            </h1>
+            <p class="welcome-subtitle">
+                Upload or capture images and let the system detect objects, recognize faces,
+                generate smart descriptions, and speak them in multiple languages.
+            </p>
+            <div class="welcome-actions">
+                <a href="{{ url_for('auth.login') }}" class="btn btn-primary welcome-cta">
+                    Get Started
+                </a>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-secondary welcome-secondary">
+                    Create Account
+                </a>
+            </div>
+            <div class="welcome-highlights">
+                <div class="welcome-highlight">
+                    <span>🎯</span>
+                    <p>YOLOv8 object detection</p>
+                </div>
+                <div class="welcome-highlight">
+                    <span>👤</span>
+                    <p>Smart face and celebrity insights</p>
+                </div>
+                <div class="welcome-highlight">
+                    <span>🔊</span>
+                    <p>Multilingual audio narration</p>
+                </div>
+            </div>
+        </div>
+        <div class="welcome-right">
+            <div class="welcome-card">
+                <div class="welcome-card-header">
+                    <span class="welcome-status-dot"></span>
+                    <span>Live Vision Preview</span>
+                </div>
+                <div class="welcome-card-body">
+                    <div class="welcome-card-image">
+                        <div class="welcome-card-overlay"></div>
+                        <div class="welcome-chip welcome-chip-top">Objects: car, person, traffic light</div>
+                        <div class="welcome-chip welcome-chip-bottom">Language: English • Telugu • Hindi</div>
+                    </div>
+                    <ul class="welcome-feature-list">
+                        <li>Instant object and face insights</li>
+                        <li>Audio summary in your chosen language</li>
+                        <li>History of your previous analyses</li>
+                    </ul>
+                </div>
+                <div class="welcome-card-footer">
+                    <span>Ready when you are</span>
+                    <a href="{{ url_for('auth.login') }}">Login to Dashboard →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

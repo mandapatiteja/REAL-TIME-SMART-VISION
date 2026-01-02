@@ -1,0 +1,48 @@
+{% extends "base_layout.html" %}
+
+{% block title %}History - Vision Explainer{% endblock %}
+
+{% block content %}
+<div class="history-container">
+    <h1 class="history-title">Analysis History</h1>
+    
+    <div id="historyList" class="history-list">
+        <div class="loading-spinner">Loading history...</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+async function loadHistory() {
+    try {
+        const response = await fetch('/api/history');
+        const history = await response.json();
+        
+        const historyList = document.getElementById('historyList');
+        historyList.innerHTML = '';
+        
+        if (history.length === 0) {
+            historyList.innerHTML = '<p class="no-history">No analysis history found</p>';
+            return;
+        }
+        
+        history.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.innerHTML = `
+                <div class="history-date">${new Date(item.timestamp).toLocaleString()}</div>
+                <div class="history-objects">Objects: ${item.objects.map(o => o.class).join(', ')}</div>
+            `;
+            historyList.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Error loading history:', error);
+        document.getElementById('historyList').innerHTML = 
+            '<p class="error">Error loading history</p>';
+    }
+}
+
+loadHistory();
+</script>
+{% endblock %}

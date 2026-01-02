@@ -1,0 +1,189 @@
+{% extends "base_layout.html" %}
+
+{% block title %}Upload Image - Vision Explainer{% endblock %}
+
+{% block content %}
+<div class="upload-container">
+    <div class="hero-section">
+        <h1 class="hero-title">Real-Time Vision Explainer</h1>
+        <p class="hero-subtitle">Upload an image to detect objects, recognize faces, and get multilingual narration</p>
+    </div>
+    
+    <div class="upload-section">
+        <div class="upload-box" id="uploadBox">
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <div class="upload-icon">📷</div>
+            <p class="upload-text">Click to upload or drag and drop</p>
+            <p class="upload-hint">Supported: JPG, PNG, GIF (Max 16MB)</p>
+        </div>
+        
+        <div class="camera-section">
+            <button id="cameraBtn" class="btn btn-secondary">
+                📸 Use Camera
+            </button>
+        </div>
+    </div>
+    
+    <div id="previewSection" class="preview-section" style="display: none;">
+        <img id="imagePreview" class="image-preview" alt="Preview">
+        <div class="action-buttons">
+            <button id="analyzeBtn" class="btn btn-primary">
+                🔍 Analyze Image
+            </button>
+            <button id="cancelBtn" class="btn btn-secondary">
+                ❌ Cancel
+            </button>
+        </div>
+    </div>
+    
+    <div id="loadingSection" class="loading-section" style="display: none;">
+        <div class="loader"></div>
+        <p>Analyzing image...</p>
+    </div>
+
+    <!-- Camera Modal -->
+    <div id="cameraModal" class="camera-modal" style="display: none;">
+        <div class="camera-content">
+            <video id="cameraVideo" autoplay playsinline></video>
+            <canvas id="cameraCanvas" style="display: none;"></canvas>
+            <div class="camera-controls">
+                <button id="captureBtn" class="btn btn-primary">📸 Capture</button>
+                <button id="closeCameraBtn" class="btn btn-secondary">❌ Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const uploadBox = document.getElementById('uploadBox');
+const fileInput = document.getElementById('fileInput');
+const previewSection = document.getElementById('previewSection');
+const imagePreview = document.getElementById('imagePreview');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const cameraBtn = document.getElementById('cameraBtn');
+const loadingSection = document.getElementById('loadingSection');
+
+// Camera elements
+const cameraModal = document.getElementById('cameraModal');
+const cameraVideo = document.getElementById('cameraVideo');
+const cameraCanvas = document.getElementById('cameraCanvas');
+const captureBtn = document.getElementById('captureBtn');
+const closeCameraBtn = document.getElementById('closeCameraBtn');
+let stream = null;
+
+let selectedFile = null;
+
+uploadBox.addEventListener('click', () => fileInput.click());
+
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        selectedFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.src = e.target.result;
+            previewSection.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+cancelBtn.addEventListener('click', () => {
+    selectedFile = null;
+    fileInput.value = '';
+    previewSection.style.display = 'none';
+});
+
+// Camera functionality
+cameraBtn.addEventListener('click', async () => {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        cameraVideo.srcObject = stream;
+        cameraModal.style.display = 'flex';
+    } catch (err) {
+        console.error("Error accessing camera: ", err);
+        alert("Could not access camera. Please ensure you have granted permission.");
+    }
+});
+
+closeCameraBtn.addEventListener('click', () => {
+    stopCamera();
+    cameraModal.style.display = 'none';
+});
+
+function stopCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+    }
+}
+
+captureBtn.addEventListener('click', () => {
+    const context = cameraCanvas.getContext('2d');
+    cameraCanvas.width = cameraVideo.videoWidth;
+    cameraCanvas.height = cameraVideo.videoHeight;
+    
+    // Draw video frame to canvas
+    // Mirror effect to match preview
+    context.translate(cameraCanvas.width, 0);
+    context.scale(-1, 1);
+    
+    context.drawImage(cameraVideo, 0, 0, cameraCanvas.width, cameraCanvas.height);
+    
+    // Convert to file
+    cameraCanvas.toBlob(blob => {
+        const file = new File([blob], "camera_capture.jpg", { type: "image/jpeg" });
+        selectedFile = file;
+        
+        // Show preview
+        imagePreview.src = URL.createObjectURL(file);
+        previewSection.style.display = 'block';
+        
+        // Close camera
+        stopCamera();
+        cameraModal.style.display = 'none';
+    }, 'image/jpeg');
+});
+
+analyzeBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+    
+    loadingSection.style.display = 'block';
+    previewSection.style.display = 'none';
+    
+    try {
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        
+        const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const uploadData = await uploadResponse.json();
+        
+        if (uploadData.success) {
+            const analyzeResponse = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({filepath: uploadData.filepath})
+            });
+            
+            const results = await analyzeResponse.json();
+            
+            localStorage.setItem('analysisResults', JSON.stringify(results));
+            localStorage.setItem('imagePath', uploadData.filepath);
+            window.location.href = '/results';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred during analysis');
+        loadingSection.style.display = 'none';
+        previewSection.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

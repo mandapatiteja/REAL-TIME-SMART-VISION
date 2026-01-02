@@ -1,0 +1,39 @@
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Python tooling
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Application data
+uploads/
+static/audio/
+weights/
+
+# Firebase credentials and secrets
+firebase/serviceAccountKey.json
+firebase/serviceAccountKey*.json
+
+# Logs
+*.log
+
+# Trae / IDE metadata
+.trae/
+
